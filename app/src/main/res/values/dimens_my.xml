@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="keyline_1">16dp</dimen>
+    <dimen name="keyline_1_minus_8dp">8dp</dimen>
+    <dimen name="keyline_0_plus_4_dp">4dp</dimen>
+    <bool name="has_two_panes">false</bool>
+    <dimen name="video_frame_width">2dp</dimen>
+    <integer name="anim_duration_mid_long">700</integer>
+</resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.x.geotourist">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <application
+        android:name=".application.AppController"
+        android:allowBackup="true"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Geotourist">
+        <activity android:name=".scenes.readFileScene.ReadFileActivity"></activity>
+        <activity
+            android:name=".scenes.playerScene.PlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|uiMode" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <activity
+            android:name=".scenes.mapScene.MapActivity"
+            android:windowSoftInputMode="stateHidden" />
+
+        <service
+            android:name="com.here.android.mpa.service.MapService"
+            android:label="HereMapService"
+            android:process="global.Here.Map.Service.v3">
+            <intent-filter>
+
+                <!-- Note, action name should not be changed. -->
+                <action android:name="com.here.android.mpa.service.MapService.v3" />
+            </intent-filter>
+        </service>
+        <!-- Start the Service if applicable on boot -->
+        <receiver android:name=".services.BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".scenes.mainScene.MainActivity"
+            android:windowSoftInputMode="stateHidden">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <meta-data
+            android:name="com.here.android.maps.appid"
+            android:value="kKvZTmQPOWsGniLzw0u5" />
+        <meta-data
+            android:name="com.here.android.maps.apptoken"
+            android:value="EAc_R6yvUn9W_6zfzI0vVw" />
+        <meta-data
+            android:name="com.here.android.maps.license.key"
+            android:value="TgiBvUtVG64084ntkzhw/H1Si7x/IRgltZJuyfsqWL+xguETF8LxpWdkTv1BdhH4aNHxpZlZkgoOq3kvHsDqdIV1thxt8eKtqIHGBGcEW1SOx2AHkYoGa5Y2OlK+ezIbldK+HsYPPc8Gr5AGPzZeafpWIbtfnxYaphwJptE8IcvScDSCq2xRu9Bvt+rAEYOiI0h7fCbi07g7afhiA6HGqtyzlL5g0kbhS/XK5sIsAuaH4vn7PHUO5n2/TwN/XQ0gkpnQQF4yxUsK1G/tDvue2Lfr2FvSluh+sQuNn6DJ15uE6Nj7WXURsgUfZSACCLnEuBYfaz/9OfoGKFTyMQZ3PdSo+pFfkrZavxWw7o7XUXoZlUu44CJuLfKjvdLhaWf50JRkG20Ksm50L3Euz8vSCMgMYjWfE4wSLpyMf7EN/kW3TmwejmumMwY25Yv+VOcQ/SZqB2Njcm8OCPYKtgUlbOkYpFPawX80I9K675L3G0QO3a/yUQWbLWnePYgIH7ZiuKmB1R2DSB22+nPZh0aEgWBmHJ3+uSMid7XIWUaU4NZ/1jgvWPE0+Sd4dUlipaJ+maNoRKZruLpKuI4zgh+Eo3xkKgxH5Jd8CC4GavcYOapOkt5G6TnlT8xuYbZlGsNaTgl3vG5Ji1b8YNMa8y5+BEG3VtBupnj5YDF+NYXGe1w=" /> <!-- Foreground services in Android 10+ require type. -->
+        <service
+            android:name=".services.BackgroundLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location" />
+    </application>
+
+</manifest>

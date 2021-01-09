@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Geotourist</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="update">Update</string>
+    <string name="no_location_text">No current location</string>
+    <string name="location_started">Location Tracking Started</string>
+    <string name="submit">Submit</string>
+    <string name="create_tour_title">Create Tour</string>
+    <string name="add_tour_title">Add Tour Title here</string>
+    <string name="add_marker">Add Marker Title</string>
+    <string name="marker_title">Marker Title</string>
+    <string name="select_color">Select Marker Color</string>
+    <string name="create">Create</string>
+    <string name="read_file">Read File</string>
+    <string name="add">Add</string>
+    <string name="go_to_setting">Go to Settings</string>
+    <string name="protected_apps">" Protected Apps"</string>
+    <string name="autostart_msg">"%s requires to be enabled in AUTOSTART (Protected Apps) after boot to function properly.%n"</string>
+    <string name="add_video">Record Video</string>
+    <string name="valid_tour_name">Please enter a valid tour name</string>
+    <string name="valid_marker_name">Please enter a valid marker name</string>
+    <string name="valid_color_name">Please select a marker color</string>
+    <string name="add_marker_info">Tap on Map to add Marker</string>
+    <string name="no_content">No Tour found\nPlease add Tour from + icon below</string>
+    <string name="silent_notification">Silent Notification</string>
+    <string name="silent_notification_msg">Enable notification with no sound</string>
+    <string name="notification_channel">All Notification</string>
+    <string name="notification_channel_msg">Enable All Notification for the app</string>
+    <string name="storage_permission_msg">Please provide storage permission to use this functionality</string>
+    <string name="dont_show_again">Do not show this message again</string>
+    <string name="stop_location_updates_button_text">Stop receiving location updates</string>
+
+    <string-array name="color_names">
+        <item>Red</item>
+        <item>Yellow</item>
+        <item>Blue</item>
+        <item>Green</item>
+    </string-array>
+</resources>
