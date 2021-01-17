@@ -6,7 +6,7 @@ import com.x.geotourist.data.local.dao.TourDao
 import com.x.geotourist.data.local.entity.MarkerEntity
 import com.x.geotourist.data.local.entity.TourDataEntity
 
-@Database(entities = [TourDataEntity::class, MarkerEntity::class], version = 1, exportSchema = false)
+@Database(entities = [TourDataEntity::class, MarkerEntity::class], version = 2, exportSchema = false)
 
 abstract class AppDatabase : RoomDatabase() {
 

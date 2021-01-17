@@ -1,54 +1,51 @@
-package com.x.geotourist.scenes.mainScene.adapter
+package com.x.geotourist.scenes.mapScene.adapter
 
 import android.app.Activity
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.x.geotourist.R
+import com.x.geotourist.data.local.entity.MarkerEntity
 import com.x.geotourist.data.local.entity.TourDataEntity
+import com.x.geotourist.databinding.MarkerListItemBinding
 import com.x.geotourist.databinding.TourListItemBinding
-import com.x.geotourist.scenes.mapScene.adapter.OrderListAdapter
 import timber.log.Timber
 import java.util.*
 
-class TourListAdapter(val activity: Activity, val itemListener: ItemListener) :
-    RecyclerView.Adapter<TourListAdapter.ViewHolder>() {
-    var contents: ArrayList<TourDataEntity> = ArrayList<TourDataEntity>()
+class OrderListAdapter(val activity: Activity, val itemListener: ItemListener) :
+    RecyclerView.Adapter<OrderListAdapter.ViewHolder>() {
+    var contents: ArrayList<MarkerEntity> = ArrayList<MarkerEntity>()
 
     interface ItemListener {
-        fun onItemClickListener(entity: TourDataEntity, position: Int)
-        fun onItemDeleteClickListener(entity: TourDataEntity, position: Int)
+        fun onItemClickListener(entity: MarkerEntity, position: Int, view: View)
+        fun onItemDeleteClickListener(entity: MarkerEntity, position: Int)
     }
 
-    fun setItems(contents: ArrayList<TourDataEntity>) {
+    fun setItems(contents: ArrayList<MarkerEntity>) {
         Timber.v("select  %s", contents.size)
+        this.contents.clear()
         this.contents.addAll(contents)
         notifyDataSetChanged()
     }
 
-    fun addItem(content: TourDataEntity) {
-        this.contents.add(content)
-        //notifyItemRangeInserted(itemCount, contents.size)
-        notifyItemInserted(this.contents.size-1);
-    }
 
-
-    inner class ViewHolder(private val listItemBinding: TourListItemBinding) :
+    inner class ViewHolder(private val listItemBinding: MarkerListItemBinding) :
         RecyclerView.ViewHolder(listItemBinding.root) {
 
-        fun bindTo(viewHolder: ViewHolder, content: TourDataEntity) {
+        fun bindTo(viewHolder: ViewHolder, content: MarkerEntity) {
             Timber.v("selects  %s", contents.size)
             listItemBinding.contentViewHolder = viewHolder
             listItemBinding.title = content.title
             listItemBinding.position = adapterPosition
+            listItemBinding.order = content.markerOrder.toInt()
             listItemBinding.idTour = content.id.toString()
         }
 
-        fun onItemClick(position: Int) {
-            itemListener.onItemClickListener(contents[position], position)
+        fun onItemClick(position: Int,view : View) {
+            itemListener.onItemClickListener(contents[position], position, view)
         }
-
 
 
     }
@@ -61,7 +58,7 @@ class TourListAdapter(val activity: Activity, val itemListener: ItemListener) :
         return ViewHolder(
             DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
-                R.layout.tour_list_item,
+                R.layout.marker_list_item,
                 parent,
                 false
             )

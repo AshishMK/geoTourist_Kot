@@ -9,7 +9,7 @@ class MapActivity : AppCompatActivity() {
         const val TOURID = "tourID"
         const val TITLE = "title"
     }
-
+    lateinit var fragment: MapFragment;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -19,7 +19,7 @@ class MapActivity : AppCompatActivity() {
        }
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = intent.getStringExtra(MapActivity.TITLE)
-        val fragment: MapFragment =
+         fragment =
             supportFragmentManager.findFragmentById(R.id.mapFragment) as MapFragment
         fragment.setTourIdFromActivity(intent.getLongExtra(MapActivity.TOURID, 0))
     }
@@ -27,5 +27,12 @@ class MapActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    override fun onBackPressed() {
+        if(fragment.isListShowing()){
+            return;
+        }
+        super.onBackPressed()
     }
 }

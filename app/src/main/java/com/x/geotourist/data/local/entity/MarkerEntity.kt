@@ -22,6 +22,8 @@ class MarkerEntity() : Parcelable {
 
     var video: String? = null
 
+    lateinit var markerOrder: Integer
+
     constructor(parcel: Parcel) : this() {
         id = parcel.readValue(java.lang.Long::class.java.classLoader) as java.lang.Long
         tourId  = parcel.readValue(java.lang.Long::class.java.classLoader) as java.lang.Long
@@ -30,6 +32,7 @@ class MarkerEntity() : Parcelable {
         lat = parcel.readValue(Double::class.java.classLoader) as java.lang.Double
         lng = parcel.readValue(Double::class.java.classLoader) as java.lang.Double
         video = parcel.readString()
+        markerOrder  = parcel.readValue(java.lang.Integer::class.java.classLoader) as Integer
 
     }
 
@@ -41,6 +44,7 @@ class MarkerEntity() : Parcelable {
         dest.writeValue(lat)
         dest.writeValue(lng)
         dest.writeString(video)
+        dest.writeValue(markerOrder)
     }
 
     override fun describeContents(): Int {

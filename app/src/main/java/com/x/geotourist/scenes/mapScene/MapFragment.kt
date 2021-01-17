@@ -7,15 +7,16 @@ import android.content.pm.PackageManager
 import android.graphics.PointF
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.widget.ContentLoadingProgressBar
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -30,13 +31,16 @@ import com.x.geotourist.data.local.entity.MarkerEntity
 import com.x.geotourist.scenes.playerScene.PlayerActivity
 import com.x.geotourist.utils.Utils
 import com.x.geotourist.application.AppController
+import com.x.geotourist.data.local.entity.TourDataEntity
+import com.x.geotourist.scenes.mapScene.adapter.OrderListAdapter
 import dagger.android.support.DaggerFragment
 import timber.log.Timber
 import java.io.File
+import java.util.ArrayList
 import javax.inject.Inject
 
 
-class MapFragment : DaggerFragment() {
+class MapFragment : DaggerFragment(), OrderListAdapter.ItemListener {
 
     @Inject
     lateinit var contentDao: TourDao
@@ -60,8 +64,9 @@ class MapFragment : DaggerFragment() {
     var gestureListenerAdded = false
     var lastLocation: android.location.Location? = null
     private var selectedColorIndex = -1
+    lateinit var list: RecyclerView
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-
+    lateinit var adapter: OrderListAdapter
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -73,17 +78,24 @@ class MapFragment : DaggerFragment() {
         colorTextView = root!!.findViewById<TextView>(R.id.selectColor)
         sheetBehavior = BottomSheetBehavior.from<View>(root!!.findViewById(R.id.bottomSheet))
         sheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        list = root!!.findViewById(R.id.list)
+
         return root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity!!)
-
+        setHasOptionsMenu(true)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        list.layoutManager = LinearLayoutManager(activity)
+        list.addItemDecoration(DividerItemDecoration(activity, RecyclerView.VERTICAL))
+
+        adapter = OrderListAdapter(activity!!, this)
+        list.adapter = adapter
         if (ActivityCompat.checkSelfPermission(
                 activity!!,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -247,7 +259,12 @@ class MapFragment : DaggerFragment() {
         marker.lat = selectedGeoCoordinate!!.latitude as java.lang.Double
         marker.lng = selectedGeoCoordinate!!.longitude as java.lang.Double
         marker.video = videoFile
+        marker.markerOrder = (contentDao.getMarkerCount(tourId) + 1) as Integer
         contentDao.insertMarker(marker)
+
+        //var lastMarker = contentDao.getLastMarker(this.tourId)
+        //lastMarker.markerOrder = lastMarker.id.toInt() as Integer
+        //contentDao.updateMarker(lastMarker)
         addMarker(contentDao.getLastMarker(this.tourId))
 
     }
@@ -415,4 +432,95 @@ class MapFragment : DaggerFragment() {
             GeoCoordinate(markerEntity.lat.toDouble(), markerEntity.lng.toDouble(), 0.0)
         videoFile = markerEntity.video
     }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.marker_menu, menu)
+        super.onCreateOptionsMenu(menu, inflater)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.markerOrder) {
+            if (list.visibility == View.GONE)
+                setRecyclerView()
+            else
+                list.visibility = View.GONE
+            return true;
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun setRecyclerView() {
+
+
+        adapter.setItems(contentDao.getMarkersByOrder(tourId) as ArrayList<MarkerEntity>)
+        list.visibility = View.VISIBLE
+
+    }
+
+    override fun onItemClickListener(entity: MarkerEntity, position: Int, view: View) {
+        setOrderMenu(view, entity, position)
+    }
+
+    override fun onItemDeleteClickListener(entity: MarkerEntity, position: Int) {
+
+    }
+
+    private fun setOrderMenu(view: View, entity: MarkerEntity, position: Int) {
+        val popupMenu: androidx.appcompat.widget.PopupMenu =
+            androidx.appcompat.widget.PopupMenu(activity!!, view)
+        popupMenu.menu.add(
+            0,
+            -1,
+            0,
+            "select a index to change ${entity.title}'s order"
+        )
+        for ((i, item) in adapter.contents.withIndex()) {
+            popupMenu.menu.add(
+                0,
+                i,
+                0,
+                if (item.markerOrder.toInt() == 0) (i + 1).toString() else item.markerOrder.toString()
+            )
+        }
+        popupMenu.setOnMenuItemClickListener { item ->
+            if (item.itemId > -1) {
+                adapter.contents.get(position).markerOrder = (item.itemId + 1) as Integer
+                contentDao.updateMarker(adapter.contents.get(position))
+                if (item.itemId < position) {
+
+                    for (i in item.itemId until position) {
+                        if (i == -1) {
+                            continue
+                        }
+                        adapter.contents.get(i).markerOrder = (i + 2) as Integer
+                        contentDao.updateMarker(adapter.contents.get(i))
+                    }
+                }
+                if (item.itemId > position) {
+
+                    for (i in item.itemId downTo position + 1) {
+                        if (i == -1) {
+                            continue
+                        }
+                        adapter.contents.get(i).markerOrder = (i) as Integer
+                        contentDao.updateMarker(adapter.contents.get(i))
+                    }
+                }
+                setRecyclerView()
+            }
+            true
+        }
+        popupMenu.show()
+    }
+
+    public fun isListShowing(): Boolean {
+        if (list.visibility == View.VISIBLE) {
+            list.visibility = View.GONE
+            return true
+        }
+        return false
+    }
+
+
 }

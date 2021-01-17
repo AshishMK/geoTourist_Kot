@@ -13,6 +13,7 @@
     <string name="select_color">Select Marker Color</string>
     <string name="create">Create</string>
     <string name="read_file">Read File</string>
+    <string name="marker_order">Marker Order</string>
     <string name="add">Add</string>
     <string name="go_to_setting">Go to Settings</string>
     <string name="protected_apps">" Protected Apps"</string>

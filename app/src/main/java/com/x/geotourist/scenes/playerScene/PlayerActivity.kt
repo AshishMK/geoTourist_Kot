@@ -18,7 +18,7 @@ import dagger.android.AndroidInjection
 import java.io.File
 import javax.inject.Inject
 
-class PlayerActivity : AppCompatActivity() {
+class   PlayerActivity : AppCompatActivity() {
     @Inject
     lateinit var simpleExoPlayer: SimpleExoPlayer
 

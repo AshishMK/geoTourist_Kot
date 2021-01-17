@@ -25,6 +25,12 @@ interface TourDao {
     @Query("SELECT * FROM `MarkerEntity` where tourId = :tourId order by id ")
     fun getMarkers(tourId: Long): List<MarkerEntity>
 
+    @Query("SELECT count(*) FROM `MarkerEntity` where tourId = :tourId  ")
+    fun getMarkerCount(tourId: Long):  Int
+
+    @Query("SELECT * FROM `MarkerEntity` where tourId = :tourId order by markerOrder ")
+    fun getMarkersByOrder(tourId: Long): List<MarkerEntity>
+
     @Query("SELECT * FROM `MarkerEntity` where tourId = :tourId order by id desc limit 1")
     fun getLastMarker(tourId: Long): MarkerEntity
 

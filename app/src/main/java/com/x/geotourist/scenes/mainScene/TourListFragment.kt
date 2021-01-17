@@ -20,14 +20,13 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.here.android.mpa.mapping.AndroidXMapFragment
 import com.x.geotourist.R
 import com.x.geotourist.data.local.dao.TourDao
 import com.x.geotourist.data.local.entity.TourDataEntity
-import com.x.geotourist.scenes.mainScene.adapter.TourListAdapter
 import com.x.geotourist.services.BackgroundLocationService
 import com.x.geotourist.utils.Utils
 import com.x.geotourist.application.AppController
+import com.x.geotourist.scenes.mainScene.adapter.TourListAdapter
 import dagger.android.support.DaggerFragment
 import java.util.*
 import javax.inject.Inject

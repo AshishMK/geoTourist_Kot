@@ -53,7 +53,7 @@ import java.util.concurrent.TimeUnit
 class BackgroundLocationService : Service() {
     companion object {
         private const val NOTIFICATION_ID = 12345678
-
+        private const val REFRESH_TIME : Long = 1000 * 60 * 14
         private const val PACKAGE_NAME = "com.x.geotourist."
         internal const val ACTION_FILE_READ_BROADCAST =
             "$PACKAGE_NAME.action.ACTION_FILE_READ_BROADCAST"
@@ -194,7 +194,7 @@ class BackgroundLocationService : Service() {
             )
             startForeground(NOTIFICATION_ID, generateForeGroundNotification(null))
             // first event immediately,  following after 10 seconds each
-            timer.scheduleAtFixedRate(refresher, 0, 30000)
+            timer.scheduleAtFixedRate(refresher, 0, REFRESH_TIME)
         } catch (unlikely: SecurityException) {
             stopForeground(true)
             stopSelf()
@@ -282,9 +282,9 @@ class BackgroundLocationService : Service() {
 
     @SuppressLint("MissingPermission")
     private fun writeFile() {
-      if(!hasPermission()){
-          return
-      }
+        if (!hasPermission()) {
+            return
+        }
         fusedLocationProviderClient.lastLocation
             .addOnSuccessListener { location: android.location.Location? ->
                 location?.let {
@@ -337,8 +337,6 @@ class BackgroundLocationService : Service() {
         LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
 
     }
-
-
 
 
 }
